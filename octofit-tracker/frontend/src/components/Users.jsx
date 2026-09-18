@@ -1,12 +1,16 @@
 import { useEffect, useState } from 'react'
-import { fetchCollection } from '../api'
+import { codespaceName, fetchCollection } from '../api'
+
+const usersUrl = codespaceName
+  ? `https://${codespaceName}-8000.app.github.dev/api/users`
+  : '/api/users'
 
 export default function Users() {
   const [users, setUsers] = useState([])
   const [status, setStatus] = useState('Loading users...')
 
   useEffect(() => {
-    fetchCollection('/api/users/')
+    fetchCollection(usersUrl)
       .then(({ items }) => { setUsers(items); setStatus('') })
       .catch((error) => setStatus(error.message))
   }, [])

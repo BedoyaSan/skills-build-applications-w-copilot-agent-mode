@@ -1,12 +1,16 @@
 import { useEffect, useState } from 'react'
-import { fetchCollection, formatDate } from '../api'
+import { codespaceName, fetchCollection, formatDate } from '../api'
+
+const activitiesUrl = codespaceName
+  ? `https://${codespaceName}-8000.app.github.dev/api/activities`
+  : '/api/activities'
 
 export default function Activities() {
   const [activities, setActivities] = useState([])
   const [status, setStatus] = useState('Loading activity...')
 
   useEffect(() => {
-    fetchCollection('/api/activities/')
+    fetchCollection(activitiesUrl)
       .then(({ items }) => { setActivities(items); setStatus('') })
       .catch((error) => setStatus(error.message))
   }, [])
