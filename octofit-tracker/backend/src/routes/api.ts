@@ -8,22 +8,22 @@ function requireObjectId(value: string): boolean {
   return mongoose.isValidObjectId(value);
 }
 
-apiRouter.get('/api/users', async (_, response, next) => {
+apiRouter.get('/users', async (_, response, next) => {
   try { response.json(await User.find().sort({ createdAt: -1 })); } catch (error) { next(error); }
 });
 
-apiRouter.post('/api/users', async (request, response, next) => {
+apiRouter.post('/users', async (request, response, next) => {
   try { response.status(201).json(await User.create(request.body)); } catch (error) { next(error); }
 });
 
-apiRouter.get('/api/activities', async (request, response, next) => {
+apiRouter.get('/activities', async (request, response, next) => {
   try {
     const filter = request.query.userId ? { userId: request.query.userId } : {};
     response.json(await Activity.find(filter).populate('userId', 'username displayName').sort({ completedAt: -1 }));
   } catch (error) { next(error); }
 });
 
-apiRouter.post('/api/activities', async (request, response, next) => {
+apiRouter.post('/activities', async (request, response, next) => {
   try {
     if (!request.body.userId || !requireObjectId(request.body.userId)) {
       response.status(400).json({ error: 'A valid userId is required' });
@@ -34,15 +34,15 @@ apiRouter.post('/api/activities', async (request, response, next) => {
   } catch (error) { next(error); }
 });
 
-apiRouter.get('/api/teams', async (_, response, next) => {
+apiRouter.get('/teams', async (_, response, next) => {
   try { response.json(await Team.find().populate('memberIds', 'username displayName')); } catch (error) { next(error); }
 });
 
-apiRouter.post('/api/teams', async (request, response, next) => {
+apiRouter.post('/teams', async (request, response, next) => {
   try { response.status(201).json(await Team.create(request.body)); } catch (error) { next(error); }
 });
 
-apiRouter.post('/api/teams/:teamId/members/:userId', async (request, response, next) => {
+apiRouter.post('/teams/:teamId/members/:userId', async (request, response, next) => {
   try {
     if (!requireObjectId(request.params.teamId) || !requireObjectId(request.params.userId)) {
       response.status(400).json({ error: 'Invalid teamId or userId' });
@@ -55,7 +55,7 @@ apiRouter.post('/api/teams/:teamId/members/:userId', async (request, response, n
   } catch (error) { next(error); }
 });
 
-apiRouter.get('/api/leaderboard', async (_, response, next) => {
+apiRouter.get('/leaderboard', async (_, response, next) => {
   try {
     response.json(await Activity.aggregate([
       { $group: { _id: '$userId', points: { $sum: '$points' }, activities: { $sum: 1 } } },
@@ -67,13 +67,13 @@ apiRouter.get('/api/leaderboard', async (_, response, next) => {
   } catch (error) { next(error); }
 });
 
-apiRouter.get('/api/workouts', async (request, response, next) => {
+apiRouter.get('/workouts', async (request, response, next) => {
   try {
     const filter = request.query.fitnessLevel ? { fitnessLevel: request.query.fitnessLevel } : {};
     response.json(await Workout.find(filter).sort({ createdAt: -1 }));
   } catch (error) { next(error); }
 });
 
-apiRouter.post('/api/workouts', async (request, response, next) => {
+apiRouter.post('/workouts', async (request, response, next) => {
   try { response.status(201).json(await Workout.create(request.body)); } catch (error) { next(error); }
 });
