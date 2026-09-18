@@ -5,7 +5,7 @@ export const API_BASE_URL = codespaceName
   : ''
 
 export async function fetchCollection(endpoint, options = {}) {
-  const response = await fetch(`${API_BASE_URL}${endpoint}/`, options)
+  const response = await fetch(`${API_BASE_URL}${endpoint}`, options)
   const contentType = response.headers.get('content-type') || ''
   const payload = contentType.includes('application/json') ? await response.json() : null
 

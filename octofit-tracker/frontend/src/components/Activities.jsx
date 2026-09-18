@@ -6,7 +6,7 @@ export default function Activities() {
   const [status, setStatus] = useState('Loading activity...')
 
   useEffect(() => {
-    fetchCollection('/api/activities')
+    fetchCollection('/api/activities/')
       .then(({ items }) => { setActivities(items); setStatus('') })
       .catch((error) => setStatus(error.message))
   }, [])
