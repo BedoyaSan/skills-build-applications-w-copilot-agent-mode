@@ -3,7 +3,10 @@ import { connectDatabase } from './config/database.js';
 import { apiRouter } from './routes/api.js';
 
 const app = express();
-const port = Number(process.env.PORT || 8000);
+const port = 8000;
+const apiBaseUrl = process.env.CODESPACE_NAME
+  ? `https://${process.env.CODESPACE_NAME}-8000.app.github.dev`
+  : `http://localhost:${port}`;
 
 app.use((_, response, next) => {
   response.header('Access-Control-Allow-Origin', '*');
@@ -12,7 +15,7 @@ app.use((_, response, next) => {
   next();
 });
 app.use(express.json());
-app.get('/health', (_, response) => response.json({ status: 'ok', service: 'octofit-api' }));
+app.get('/health', (_, response) => response.json({ status: 'ok', service: 'octofit-api', apiBaseUrl }));
 app.use('/api', apiRouter);
 app.use((error: Error, _: Request, response: Response, next: NextFunction) => {
   if (response.headersSent) return next(error);
@@ -20,7 +23,10 @@ app.use((error: Error, _: Request, response: Response, next: NextFunction) => {
 });
 
 connectDatabase()
-  .then(() => app.listen(port, () => console.log(`OctoFit API listening on port ${port}`)))
+  .then(() => app.listen(port, () => {
+    console.log(`OctoFit API listening on port ${port}`);
+    console.log(`API base URL: ${apiBaseUrl}`);
+  }))
   .catch((error: unknown) => {
     console.error('Unable to start API:', error);
     process.exit(1);
