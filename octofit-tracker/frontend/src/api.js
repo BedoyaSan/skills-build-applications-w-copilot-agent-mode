@@ -6,10 +6,15 @@ export const API_BASE_URL = codespaceName
 
 export async function fetchCollection(endpoint, options = {}) {
   const response = await fetch(`${API_BASE_URL}/${endpoint}/`, options)
-  const payload = await response.json()
+  const contentType = response.headers.get('content-type') || ''
+  const payload = contentType.includes('application/json') ? await response.json() : null
 
   if (!response.ok) {
-    throw new Error(payload.error || `Request failed with status ${response.status}`)
+    throw new Error(payload?.error || `Request failed with status ${response.status}`)
+  }
+
+  if (!payload) {
+    throw new Error('The API returned HTML instead of JSON. Define VITE_CODESPACE_NAME or start the backend on port 8000.')
   }
 
   return {
