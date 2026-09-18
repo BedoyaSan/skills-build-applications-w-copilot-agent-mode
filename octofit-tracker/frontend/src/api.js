@@ -2,10 +2,10 @@ const codespaceName = import.meta.env.VITE_CODESPACE_NAME?.trim()
 
 export const API_BASE_URL = codespaceName
   ? `https://${codespaceName}-8000.app.github.dev`
-  : '/api'
+  : ''
 
 export async function fetchCollection(endpoint, options = {}) {
-  const response = await fetch(`${API_BASE_URL}/${endpoint}/`, options)
+  const response = await fetch(`${API_BASE_URL}${endpoint}/`, options)
   const contentType = response.headers.get('content-type') || ''
   const payload = contentType.includes('application/json') ? await response.json() : null
 
