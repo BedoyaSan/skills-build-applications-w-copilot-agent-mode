@@ -6,7 +6,7 @@ export default function Leaderboard() {
   const [status, setStatus] = useState('Loading leaderboard...')
 
   useEffect(() => {
-    fetchCollection('leaderboard')
+    fetchCollection('/api/leaderboard')
       .then(({ items }) => { setLeaders(items); setStatus('') })
       .catch((error) => setStatus(error.message))
   }, [])

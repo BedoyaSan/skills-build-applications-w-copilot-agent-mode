@@ -6,7 +6,7 @@ export default function Users() {
   const [status, setStatus] = useState('Loading users...')
 
   useEffect(() => {
-    fetchCollection('users')
+    fetchCollection('/api/users')
       .then(({ items }) => { setUsers(items); setStatus('') })
       .catch((error) => setStatus(error.message))
   }, [])

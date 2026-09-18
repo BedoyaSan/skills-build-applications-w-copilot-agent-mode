@@ -1,7 +1,7 @@
 const codespaceName = import.meta.env.VITE_CODESPACE_NAME?.trim()
 
 export const API_BASE_URL = codespaceName
-  ? `https://${codespaceName}-8000.app.github.dev/api`
+  ? `https://${codespaceName}-8000.app.github.dev`
   : '/api'
 
 export async function fetchCollection(endpoint, options = {}) {
